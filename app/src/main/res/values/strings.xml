@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">EasyGrades</string>
+
+    <string name="search_hint">Easy recommend</string>
+
+    <string-array name="array">
+        <item>Mercury</item>
+        <item>Venus</item>
+    </string-array>
+</resources>

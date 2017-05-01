@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	 android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:text="COL 100"
+		android:id="@+id/course"
+		android:textSize="20dp"
+		android:gravity="center"
+		android:textStyle="bold"
+		/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/course">
+<TextView
+		android:id="@+id/text1" 
+        android:text="Course Content"
+		android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="10dp" />
+	<RatingBar  
+        android:id="@+id/ratingBar1"  
+        android:layout_width="wrap_content"  
+		style="?android:attr/ratingBarStyleIndicator"
+        android:layout_height="wrap_content"  
+        android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="10dp" /> 
+	<TextView
+		android:id="@+id/text2" 
+        android:text="Concept Delivery"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="70dp" />
+	<RatingBar  
+        android:id="@+id/ratingBar2"  
+        android:layout_width="wrap_content" 
+		style="?android:attr/ratingBarStyleIndicator"
+        android:layout_height="wrap_content"  
+        android:layout_alignParentTop="true"  
+		android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="70dp" /> 
+	<TextView
+		android:id="@+id/text3" 
+        android:text="Course Assignment"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="130dp" />
+	<RatingBar  
+        android:id="@+id/ratingBar3"  
+        android:layout_width="wrap_content" 
+		style="?android:attr/ratingBarStyleIndicator"
+        android:layout_height="wrap_content"  
+        android:layout_alignParentTop="true"  
+		android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="130dp" /> 
+	<TextView
+		android:id="@+id/text4" 
+        android:text="Course Attendance"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="190dp" />
+	<RatingBar  
+        android:id="@+id/ratingBar4"  
+        android:layout_width="wrap_content" 
+		style="?android:attr/ratingBarStyleIndicator"
+        android:layout_height="wrap_content"  
+        android:layout_alignParentTop="true"  
+		android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="190dp" /> 
+	<TextView
+		android:id="@+id/text5" 
+        android:text="Course Duration"
+		android:textStyle="bold"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="250dp" />
+	<RatingBar  
+        android:id="@+id/ratingBar5"  
+        android:layout_width="wrap_content" 
+		style="?android:attr/ratingBarStyleIndicator"
+        android:layout_height="wrap_content"  
+        android:layout_alignParentTop="true"  
+		android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"  
+		android:isIndicator="false"
+        android:layout_marginTop="250dp" />
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Submit"
+		android:id="@+id/button1"
+		android:layout_alignParentTop="true"  
+		android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"  
+        android:layout_marginTop="350dp" />
+
+	</RelativeLayout>
+
+	</RelativeLayout>
