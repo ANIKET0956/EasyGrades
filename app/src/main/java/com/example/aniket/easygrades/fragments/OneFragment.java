@@ -11,13 +11,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.aniket.easygrades.JSONparse;
 import com.example.aniket.easygrades.MainActivity;
 import com.example.aniket.easygrades.R;
+
+/**
+ * The fragment class shows the list of courses being offered
+ * in current semester. This fragment is called on when a user
+ * enters right credentials.
+ */
 
 
 public class OneFragment extends Fragment{
 
-    /** This is an empty publuc constructor which is necessary for proper functioning*/
+    public static ListView lv;
+
     public OneFragment() {
         // Required empty public constructor
     }
@@ -46,16 +54,16 @@ public class OneFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_one, container, false);
-//        return inflater.inflate(R.layout.fragment_one, container, false);
-
-        ListView lv = (ListView) v.findViewById(R.id.courseListView);
+        lv = (ListView) v.findViewById(R.id.courseListView);
 
         // storing string resources into Array
+        MainActivity.jparse = new JSONparse(getActivity());
+        MainActivity.jparse.get_course("2016-17");
+
+
         String[] courses_available = getResources().getStringArray(R.array.courses_available);
 
         // Binding resources Array to ListAdapter
-        ArrayAdapter<String> adapters = new ArrayAdapter<String>(this.getContext(), R.layout.courses_list_item, R.id.label, courses_available);
-        lv.setAdapter(adapters);
 
         // listening to single list item on click
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,7 +71,7 @@ public class OneFragment extends Fragment{
                                     int position, long id) {
 
                 // selected item
-                String product = ((TextView) view).getText().toString();
+                String product = MainActivity.course_inform.get(position).get(MainActivity.KEY_COURSE_ID);
 
                 // Launching new Activity on selecting single List Item
                 Intent i = new Intent(getActivity().getApplicationContext(), MainActivity.class);

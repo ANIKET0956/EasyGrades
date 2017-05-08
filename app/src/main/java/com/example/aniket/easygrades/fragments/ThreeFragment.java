@@ -8,6 +8,12 @@ import android.view.ViewGroup;
 
 import com.example.aniket.easygrades.R;
 
+/**
+ * The fragment is called when a user swipes to see his profile.
+ * The user details along with their department and degree is
+ * being highlighted on the layout.
+ */
+
 public class ThreeFragment extends Fragment{
     /** This is an empty publuc constructor which is necessary for proper functioning*/
     public ThreeFragment() {

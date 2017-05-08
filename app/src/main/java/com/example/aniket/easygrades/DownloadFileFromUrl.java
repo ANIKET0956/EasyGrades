@@ -37,9 +37,19 @@ class DownloadFileFromUrl extends AsyncTask<String,Integer,String>{
          * */
         private PowerManager.WakeLock mWakeLock;
         Context context;
-        public  DownloadFileFromUrl(Context c)
+
+
+        public static String course_name;
+        public static String notes_id;
+        public static String notes_url;
+
+        public  DownloadFileFromUrl(Context c,String course,String notes,String url)
         {
             context =c;
+            course_name = course;
+            notes_id = notes;
+            notes_url = url;
+
         }
 
 
@@ -51,6 +61,7 @@ class DownloadFileFromUrl extends AsyncTask<String,Integer,String>{
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
             mWakeLock.acquire();
+            Log.d("show_time","time");
             MainActivity.adapter.mProgressDialog.show();
         }
 
@@ -86,6 +97,9 @@ class DownloadFileFromUrl extends AsyncTask<String,Integer,String>{
                 Log.d("Download Manager", "Error: " + e);
             }
             Log.v("Download Manager", "Check: ");
+
+            MainActivity.jparse.send_tag_download(course_name,notes_id,notes_url);
+
             return "";
         }
 

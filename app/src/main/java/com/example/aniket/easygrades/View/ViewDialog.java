@@ -1,4 +1,4 @@
-package com.example.aniket.easygrades;
+package com.example.aniket.easygrades.View;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,15 +15,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aniket.easygrades.MainActivity;
+import com.example.aniket.easygrades.R;
+import com.example.aniket.easygrades.fragments.OneFragment;
 import com.example.aniket.easygrades.helper.FilePath;
 
 import org.apache.commons.io.FilenameUtils;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -48,12 +53,24 @@ public class ViewDialog {
     ProgressDialog Pdialog;
     Activity mActivity;
 
+    public static String course_name;
+
+    public ViewDialog(String course)
+    {
+        course_name = course;
+    }
+
     // Upload Server URL.
     public static String UPLOAD_URL = "http://" + MainActivity.localhost+
-            "/cms/uploader/UploadToServer.php";
+            "/UploadToServer.php";
+
+    String note_title,note_tag1,note_tag2,note_tag3;
+    EditText widget;
+
+    Dialog dialog;
 
     public void showDialog(final Activity activity, final String selectedFilePath,Uri uri){
-        final Dialog dialog = new Dialog(activity);
+        dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog);
@@ -62,8 +79,9 @@ public class ViewDialog {
         TextView textview = (TextView)dialog.findViewById(R.id.textView5);
         textview.setText("Path : "+ FilenameUtils.getName(uri.getPath()));
 
-        Button button = (Button)dialog.findViewById(R.id.button);
+        widget = (EditText)dialog.findViewById(R.id.editText);
 
+        Button button = (Button)dialog.findViewById(R.id.button);
         dialog.show();
 
         //  Running new thread to avoid doing task on UI thread.
@@ -71,12 +89,27 @@ public class ViewDialog {
             @Override
             public void onClick(View v) {
                 if(selectedFilePath != null){
+
+
                     Pdialog = ProgressDialog.show(activity,"","Uploading File...",true);
+
 
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
+
+                            note_title = widget.getText().toString();
+                            widget = (EditText)dialog.findViewById(R.id.tag1);
+                            note_tag1 = widget.getText().toString();
+                            widget = (EditText)dialog.findViewById(R.id.tag2);
+                            note_tag2 = widget.getText().toString();
+                            widget = (EditText)dialog.findViewById(R.id.tag3);
+                            note_tag3 = widget.getText().toString();
+
                             //creating new thread to handle Http Operations
+                            String basename = FilenameUtils.getBaseName(selectedFilePath)+"."+FilenameUtils.getExtension(selectedFilePath);
+                            MainActivity.jparse.addNote(note_title,note_tag1,note_tag2,note_tag3,basename,course_name);
+
                             int res = uploadFile(selectedFilePath);
                             if(res > 0){
                                 dialog.dismiss();
@@ -211,7 +244,16 @@ public class ViewDialog {
                 dataOutputStream.flush();
                 dataOutputStream.close();
 
+                BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = "", res = "";
+                while ((line = rd.readLine()) != null) {
+                    res += line;
+                }
 
+
+                Log.d("response echo",res);
+                System.out.println(res);
+                rd.close();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

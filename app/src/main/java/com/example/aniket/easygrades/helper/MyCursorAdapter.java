@@ -14,7 +14,7 @@ import com.example.aniket.easygrades.R;
 /**
  * Created by Aniket on 4/29/2017.
  * Customised Suggestion Adapter with preferred layouts.
- *
+ *  The adapter is intialized with suggestion values of tags.
  */
 
 public class MyCursorAdapter extends SimpleCursorAdapter {
