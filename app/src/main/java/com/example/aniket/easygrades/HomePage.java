@@ -44,6 +44,8 @@ public class HomePage extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs_add);
         tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
     private void setupViewPager(ViewPager viewPager) {

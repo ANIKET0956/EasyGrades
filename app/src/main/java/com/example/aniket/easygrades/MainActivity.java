@@ -3,19 +3,17 @@ package com.example.aniket.easygrades;
 import android.Manifest;
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.StrictMode;
 import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -25,25 +23,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.aniket.easygrades.View.ViewDialog;
 import com.example.aniket.easygrades.helper.FilePath;
 import com.example.aniket.easygrades.helper.MyCursorAdapter;
 
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import static android.os.StrictMode.*;
 
@@ -60,38 +51,58 @@ public class MainActivity extends AppCompatActivity {
 
     // Static Variables defined
     private static final int PICK_FILE_REQUEST = 1;
+    public static String KEY_ID = "key_id";
     public static String KEY_URL = "key_url";
     public static String KEY_TITLE = "key_title";
     public static String KEY_TAG1 = "key_tag1";
     public static String KEY_TAG2 = "key_tag2";
     public static String KEY_TAG3 = "key_tag3";
-    public static String localhost = "192.168.43.41";
+    public static String KEY_NUM_DOWNLOAD = "key_num_download";
+
+    public static String localhost = "192.168.43.251";
+    public static String GET_OBJ_URL = "http://"+localhost+"/get_courses.php";
+    public static String ADD_NOTE_URL = "http://"+localhost+"/upload_notes.php";
+    public static String GET_NOTES_COURSE_URL = "http://"+localhost+"/get_notes.php";
+    public static String DOWNLOAD_URL =  "http://" + localhost + "/uploads/";
+    public static String NOTES_DOWNLOAD = "http://" + localhost +  "/download_notes.php";
+    public static String GET_PARAMS_COURSE = "http://"+ localhost + "/get_tags.php";
+    public static String UPDATE_RATING = "http://"+ localhost + "/rate_course.php";
+    public static String URL_LOGIN = "http://" + localhost + "/login_user.php";
+    public static String URL_REGISTER = "http://" + localhost + "/register_user.php";
+
+
     public static String COURSE_TAG = "course_tag";
     private String selectedFilePath;
     public static SearchView searchView;
+    public static JSONparse jparse;
+
+    public static ArrayList<HashMap<String,String>> course_inform = new ArrayList<HashMap<String, String>>();
+    public static HashMap<String,HashMap<String,String>> notes_course = new HashMap<String, HashMap<String, String>>();
+    public static Set<String> all_tags =  new HashSet<String>();
+
+
+    public static String KEY_COURSE_ID = "key_course_id";
+    public static String KEY_PROF_NAME = "prof_name";
+    public static String KEY_DEPT_NAME = "dept_name";
 
 
 
     // Suggestions when users try to find in search menu.
-    private static final String[] SUGGESTIONS = {
-            "Lecture 1", "Lecture 2", "Course", "HUL" , "Manali" ,  "Trip", "Form"
-    };
-
 
 
     // Basic layout features.
     private SimpleCursorAdapter mAdapter;
 
     // Data fetched from server database.
-    public ArrayList<HashMap<String,String>> Totaldata = new ArrayList<HashMap<String, String>>();
-    public ArrayList<HashMap<String,String>> Searchdata = new ArrayList<HashMap<String, String>>();
+    static public ArrayList<HashMap<String,String>> Totaldata = new ArrayList<HashMap<String, String>>();
+    static public ArrayList<HashMap<String,String>> Searchdata = new ArrayList<HashMap<String, String>>();
 
-    public ListView listview;
+    public static ListView listview_main;
     public static MyAdapter adapter;
     public Activity mActivity;
     MenuItem star_menu;
     String query;
-    String course_name=null;
+    public static  String course_name=null;
 
 
     @Override
@@ -105,6 +116,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         mActivity = this;
+        listview_main = (ListView)findViewById(R.id.listview);
+
+
+
+        if(query!=null ) {
+            Search_Home(query);
+        }
+        else
+            initalise_Home();
 
 
         // Initialise sugesstion adapter.
@@ -125,10 +145,13 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(course_name);
         }
 
-        listview = (ListView)findViewById(R.id.listview);
+
 
 
         FloatingActionButton button = (FloatingActionButton)findViewById(R.id.floatingActionButton);
+
+        button.setBackgroundTintList(ColorStateList.valueOf(Color
+                .parseColor("#0000e5")));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,11 +162,9 @@ public class MainActivity extends AppCompatActivity {
             }});
 
 
+
+
         // To check if this is HomePage or QueryPage.
-        if(query!=null)
-            Search_Home(query);
-        else
-            initalise_Home();
 
     }
 
@@ -151,56 +172,20 @@ public class MainActivity extends AppCompatActivity {
     // Some Initalising data.
     public void initalise_Home()
     {
-        Totaldata.clear();
 
-        HashMap<String,String> item =  new HashMap<String, String>();
-        item.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/IMG_1389.JPG");
-        item.put(KEY_TITLE,"Manali");
-        item.put(KEY_TAG1,"Trip");
-        Totaldata.add(item);
+        jparse.get_notes_course(course_name);
+
+        AdapterView.OnItemClickListener myListViewClicked;
 
 
-        HashMap<String,String> item1 =  new HashMap<String, String>();
-        item1.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/IMG_1485.JPG");
-        item1.put(KEY_TITLE,"ParaGliding");
-        item1.put(KEY_TAG1,"Images");
-        Totaldata.add(item1);
+        myListViewClicked = new AdapterView.OnItemClickListener() {
 
-        HashMap<String,String> item2 =  new HashMap<String, String>();
-        item2.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/PPR_59367558.pdf");
-        item2.put(KEY_TITLE,"State Bank Of India");
-        item2.put(KEY_TAG1,"Form");
-        Totaldata.add(item2);
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        };
 
-
-        HashMap<String,String> item3 =  new HashMap<String, String>();
-        item3.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/FreeWill.pdf");
-        item3.put(KEY_TITLE,"Free Will");
-        item3.put(KEY_TAG1,"HUL");
-        Totaldata.add(item3);
-
-
-        HashMap<String,String> item4 =  new HashMap<String, String>();
-        item4.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/CMSDesignDoc.pdf");
-        item4.put(KEY_TITLE,"CMS Doc Design");
-        item4.put(KEY_TAG1,"Course");
-        Totaldata.add(item4);
-
-        HashMap<String,String> item5 =  new HashMap<String, String>();
-        item5.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/Software_Design_Doc.pdf");
-        item5.put(KEY_TITLE,"Software Design Doc");
-        item5.put(KEY_TAG1,"Course");
-        Totaldata.add(item5);
-
-
-        HashMap<String,String> item6 =  new HashMap<String, String>();
-        item6.put(KEY_URL,"http://"+localhost+"/cms/uploader/uploads/1003_DSA.pdf");
-        item6.put(KEY_TITLE,"DSA");
-        item6.put(KEY_TAG1,"Course");
-        Totaldata.add(item6);
-
-        adapter = new MyAdapter(this,Totaldata);
-        listview.setAdapter(adapter);
+        listview_main.setOnItemClickListener(myListViewClicked);
 
     }
 
@@ -227,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         adapter = new MyAdapter(this,Searchdata);
-        listview.setAdapter(adapter);
+        listview_main.setAdapter(adapter);
 
     }
 
@@ -256,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedFilePath = FilePath.getPath(this,selectedFileUri);
 
                 if(selectedFilePath != null && !selectedFilePath.equals("")){
-                    ViewDialog box = new ViewDialog();
+                    ViewDialog box = new ViewDialog(getSupportActionBar().getTitle().toString());
                     box.showDialog(mActivity,selectedFilePath,selectedFileUri);
                 }else{
                     Toast.makeText(this,"Cannot upload file to server",Toast.LENGTH_SHORT).show();
@@ -311,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().setHomeButtonEnabled(true);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
             }
         });
 
@@ -318,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onClose() {
 
+                searchView.setQuery("", false);
                 star_menu.setVisible(true);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 initalise_Home();
@@ -364,6 +351,12 @@ public class MainActivity extends AppCompatActivity {
 
     // You must implements your logic to get data using OrmLite
     private void populateAdapter(String query) {
+        final String [] SUGGESTIONS = new String[all_tags.size()];
+        int index=0;
+        for (String tag_find: all_tags)
+        {   SUGGESTIONS[index] = tag_find;
+            index++;
+        }
         final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "cityName" });
         for (int i=0; i<SUGGESTIONS.length; i++) {
             if (SUGGESTIONS[i].toLowerCase().startsWith(query.toLowerCase()))
@@ -438,8 +431,8 @@ public class MainActivity extends AppCompatActivity {
                 initalise_Home();
 
         }
-
-        if(course_name==null)course_name = intent.getStringExtra(COURSE_TAG);
-
+        else
+            course_name = intent.getStringExtra(COURSE_TAG);
     }
+
 }
