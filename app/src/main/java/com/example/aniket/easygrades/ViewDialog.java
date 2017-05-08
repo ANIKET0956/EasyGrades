@@ -114,7 +114,7 @@ public class ViewDialog {
     }
 
 
-    // Uploading the Selected FilePath.
+    /**Uploading the Selected FilePath. */
     public int uploadFile(final String selectedFilePath){
 
         int serverResponseCode = 0;
@@ -232,5 +232,4 @@ public class ViewDialog {
             return serverResponseCode;
         }
     }
-
 }

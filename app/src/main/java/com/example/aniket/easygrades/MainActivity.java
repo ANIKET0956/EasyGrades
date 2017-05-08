@@ -49,15 +49,13 @@ import static android.os.StrictMode.*;
 
 
 /**
- * Main Activity when we log into Course HomePage
- * Contains Listview of notes available
- * Upload and Download options made avaialble.
- * Can naviagate to HomePage and CourseRating activity.
- *
+ * This is the Main Activity that is displayed when a user log into Course HomePage <br>
+ * It contains a list of notes available in the course. <br>
+ * User can upload and download from this page only. Buttons for these tasks are available.<br>
+ * User can also naviagate to HomePage and CourseRating activity.
  */
+
 public class MainActivity extends AppCompatActivity {
-
-
     // Static Variables defined
     private static final int PICK_FILE_REQUEST = 1;
     public static String KEY_URL = "key_url";
@@ -70,14 +68,10 @@ public class MainActivity extends AppCompatActivity {
     private String selectedFilePath;
     public static SearchView searchView;
 
-
-
-    // Suggestions when users try to find in search menu.
+    /** Suggestions when users try to find in search menu. */
     private static final String[] SUGGESTIONS = {
             "Lecture 1", "Lecture 2", "Course", "HUL" , "Manali" ,  "Trip", "Form"
     };
-
-
 
     // Basic layout features.
     private SimpleCursorAdapter mAdapter;
@@ -94,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     String course_name=null;
 
 
+    /** This is the first function that is called when this activity is created.
+     * All the method and functions calls are done from this method*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Some Initalising data.
+    /** Intitialises all the attributes of the class which will be used further */
     public void initalise_Home()
     {
         Totaldata.clear();
@@ -204,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Seraching Notes on the basis of single query.
+    /** Searching Notes on the basis of single query. */
     public void Search_Home(String query)
     {
         Searchdata.clear();
@@ -231,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /** Calls the Default Android File Chooser for picking up file to upload*/
     private void showFileChooser() {
         Intent intent = new Intent();
         //sets the select file to all types of files
@@ -242,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /** This function when the Activity is about to terminate*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -271,14 +269,17 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    //persmission method.
+    /** Persmission method.
+     * Check if we have read or written permission
+     * @param activity
+     */
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have read or write permission
         int writePermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int readPermission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if (writePermission != PackageManager.PERMISSION_GRANTED || readPermission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
+            //We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,
@@ -287,11 +288,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**Inflate the menu;
+     * this adds items to the action bar if it is present.show menu only when home fragment is selected
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-
-        // show menu only when home fragment is selected
         getMenuInflater().inflate(R.menu.menu, menu);
         final MenuItem star = (MenuItem)menu.findItem(R.id.action_search);
         star_menu = (MenuItem)menu.findItem(R.id.action_search);
@@ -362,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // You must implements your logic to get data using OrmLite
+    /**You must implements your logic to get data using OrmLite*/
     private void populateAdapter(String query) {
         final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "cityName" });
         for (int i=0; i<SUGGESTIONS.length; i++) {
@@ -375,6 +376,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /** This function is called when a menu item is selected from the menu*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -397,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // To do when user presses back button.
+    /**This function is called when the user clicks back button*/
     @Override
     public void onBackPressed()
     {
@@ -420,14 +422,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Handling new intent.
+    /** This function is called on the creation of new intent.*/
     @Override
     protected void onNewIntent(Intent intent) {
 
         handleIntent(intent);
     }
 
-
+    /** This function is called for handling new intent.*/
     private void handleIntent(Intent intent) {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {

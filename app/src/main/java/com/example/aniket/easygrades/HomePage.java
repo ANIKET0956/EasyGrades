@@ -21,13 +21,20 @@ import com.example.aniket.easygrades.fragments.TwoFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ *     This is the first page that a user will see after it has loggen in to the application. <br>
+ *     It contains three fragments which are represented as TABs in the homepage
+ */
 public class HomePage extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+    /**
+     *  When Activity is started and application is not loaded, then both onCreate() methods will be called.
+     *  But for subsequent starts of Activity , the onCreate() of application will not be called
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +53,10 @@ public class HomePage extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    /**
+     * Setup the pager which will contain adapter to display all the three fragments as TABs
+     * @param viewPager
+     */
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OneFragment(), "Courses");
@@ -54,6 +65,10 @@ public class HomePage extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    /**
+     *   Subclass for the Page Adapter. All the functions of this class are used only in Homepage Class and nowhere else.
+     *   Therefore it is defined as a subclass of the Homepage Class.
+     */
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();

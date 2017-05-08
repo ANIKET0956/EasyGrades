@@ -17,15 +17,30 @@ import com.example.aniket.easygrades.R;
 
 public class OneFragment extends Fragment{
 
+    /** This is an empty publuc constructor which is necessary for proper functioning*/
     public OneFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * When Activity is started and application is not loaded, then both onCreate() methods will be called.
+     * But for subsequent starts of Activity , the onCreate() of application will not be called
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     *
+     * When Activity is started and application is not loaded, then both onCreate() methods will be called.
+     * But for subsequent starts of Activity , the onCreate() of application will not be called
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
